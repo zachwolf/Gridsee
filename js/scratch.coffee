@@ -1,0 +1,1 @@
+console = window.console
