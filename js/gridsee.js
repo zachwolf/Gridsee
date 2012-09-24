@@ -5,7 +5,11 @@
   console = window.console;
 
   (function(window, doc, g) {
-    var Gridsee;
+    var Gridsee, events, ns;
+    ns = "gridsee";
+    events = {
+      click: "click." + ns
+    };
     Gridsee = (function() {
 
       function Gridsee() {
@@ -20,18 +24,46 @@
         return this.$ = {
           body: g(doc.body),
           pageEls: g("<div />", {
-            id: "y"
+            id: "" + ns + "-wrapper"
           }),
           fakebody: g("<body />"),
           canvas: g("<canvas />"),
           settings: g("<div />"),
-          menu: g("<div />")
+          menu: g("<button />")
         };
       };
 
       Gridsee.prototype.controller = function() {
-        var _this = this;
-        return (function() {
+        var Popup, popup,
+          _this = this;
+        Popup = (function() {
+
+          function Popup(x) {
+            this.isOpen = false;
+          }
+
+          Popup.prototype.open = function() {
+            this.isOpen = true;
+            return console.log("open");
+          };
+
+          Popup.prototype.close = function() {
+            this.isOpen = false;
+            return console.log("close");
+          };
+
+          Popup.prototype.toggle = function() {
+            return this[this.isOpen ? "close" : "open"]();
+          };
+
+          return Popup;
+
+        })();
+        popup = new Popup();
+        (function() {
+          _this.$.menu.on(events.click, function(e) {
+            return popup.toggle();
+          }).appendTo(_this.$.body);
           return console.log(_this.$.pageEls);
         })();
       };
